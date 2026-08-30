@@ -17,15 +17,15 @@ export function eventFromTask(task, appUrl) {
   return {
     summary: task.completed ? `✓ ${task.title}` : task.title,
     description: `${task.notes || ''}\n\nManaged by Tmony: ${appUrl}`.trim(),
-    start: { dateTime: start.toISOString() },
-    end: { dateTime: end.toISOString() },
+    start: { dateTime: start.toISOString(), timeZone: 'Africa/Lagos' },
+    end: { dateTime: end.toISOString(), timeZone: 'Africa/Lagos' },
     recurrence: recurrenceLines(task.recurrence),
     reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: task.reminder_minutes ?? 30 }] },
     extendedProperties: { private: { testimonyTaskId: task.id, testimonyUserId: task.user_id } },
   };
 }
 
-const WEEKDAYS = ['SU','MO','TU','WE','TH','FR','SA'];
+const WEEKDAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
 function localDateParts(timezone, now = new Date()) {
   const parts = new Intl.DateTimeFormat('en-US', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now);
@@ -33,16 +33,16 @@ function localDateParts(timezone, now = new Date()) {
 }
 
 export function journalReminderEvent({ userId, timezone, dayOfWeek, time, label, appUrl, now = new Date() }) {
-  const local = localDateParts(timezone, now); const currentDay = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(local.weekday);
-  const currentMinutes = Number(local.hour) * 60 + Number(local.minute); const [hour, minute] = time.slice(0,5).split(':').map(Number);
+  const local = localDateParts(timezone, now); const currentDay = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(local.weekday);
+  const currentMinutes = Number(local.hour) * 60 + Number(local.minute); const [hour, minute] = time.slice(0, 5).split(':').map(Number);
   let daysAhead = (dayOfWeek - currentDay + 7) % 7;
   if (daysAhead === 0 && currentMinutes >= hour * 60 + minute) daysAhead = 7;
-  const startValue = new Date(Date.UTC(Number(local.year), Number(local.month)-1, Number(local.day)+daysAhead,hour,minute));
-  const endValue = new Date(startValue.getTime() + 30 * 60000); const day = startValue.toISOString().slice(0,10); const endDay = endValue.toISOString().slice(0,10); const endTime = endValue.toISOString().slice(11,16);
+  const startValue = new Date(Date.UTC(Number(local.year), Number(local.month) - 1, Number(local.day) + daysAhead, hour, minute));
+  const endValue = new Date(startValue.getTime() + 30 * 60000); const day = startValue.toISOString().slice(0, 10); const endDay = endValue.toISOString().slice(0, 10); const endTime = endValue.toISOString().slice(11, 16);
   return {
     summary: `Tmony weekly progress review · ${label}`,
     description: `Review completed tasks, achievements, milestones, and reflections in My Journal.\n\nOpen Tmony: ${appUrl}`,
-    start: { dateTime: `${day}T${time.slice(0,5)}:00`, timeZone: timezone },
+    start: { dateTime: `${day}T${time.slice(0, 5)}:00`, timeZone: timezone },
     end: { dateTime: `${endDay}T${endTime}:00`, timeZone: timezone },
     recurrence: [`RRULE:FREQ=WEEKLY;BYDAY=${WEEKDAYS[dayOfWeek]}`],
     reminders: { useDefault: false, overrides: [{ method: 'popup', minutes: 0 }] },

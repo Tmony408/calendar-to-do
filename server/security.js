@@ -10,7 +10,9 @@ export function signSession(user) {
 }
 
 export function verifySession(token) {
-  return jwt.verify(token, required('JWT_SECRET'));
+  const payload = jwt.verify(token, required('JWT_SECRET'));
+  if (!payload.sub) throw new Error('Invalid session');
+  return { id: payload.sub, email: payload.email };
 }
 
 function encryptionKey() {
