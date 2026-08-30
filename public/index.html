@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#11101a" />
+  <title>Tmony</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/subtasks.css" />
+  <link rel="stylesheet" href="/journal.css" />
+  <link rel="stylesheet" href="/mobile.css" />
+</head>
+<body>
+  <div id="toast" class="toast" role="status"></div>
+  <section id="auth-view" class="auth-view">
+    <div class="auth-art">
+      <div class="brand"><span class="brand-mark">T</span><span>Tmony</span></div>
+      <div class="auth-copy">
+        <span class="eyebrow">MAKE SPACE FOR WHAT MATTERS</span>
+        <h1>Your day,<br><em>beautifully</em> organized.</h1>
+        <p>Tasks, focus, and Google Calendar—moving together in one calm workspace.</p>
+      </div>
+      <div class="floating-card">
+        <div class="mini-date">TODAY · AUG 30</div>
+        <div class="mini-task"><span class="mini-check done">✓</span><span>Morning workout</span><small>7:00 AM</small></div>
+        <div class="mini-task"><span class="mini-check"></span><span>Review weekly goals</span><small>10:30 AM</small></div>
+        <div class="mini-task"><span class="mini-check"></span><span>Call Victoria</span><small>8:00 PM</small></div>
+      </div>
+    </div>
+    <div class="auth-panel">
+      <div class="mobile-brand brand"><span class="brand-mark">T</span><span>Tmony</span></div>
+      <form id="auth-form" class="auth-form">
+        <span class="eyebrow">WELCOME</span>
+        <h2 id="auth-title">Good to see you again.</h2>
+        <p id="auth-subtitle">Sign in and pick up right where you left off.</p>
+        <button type="button" class="google-button" id="google-login"><span class="google-g">G</span> Continue with Google</button>
+        <div class="divider"><span>or continue with email</span></div>
+        <label id="name-field" class="hidden">Full name<input id="name" autocomplete="name" placeholder="Testimony Adetula"></label>
+        <label>Email address<input id="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" required></label>
+        <button class="primary-button" id="auth-submit">Sign in</button>
+        <p class="switch-copy"><span id="switch-prompt">New here?</span> <button type="button" class="text-button" id="auth-switch">Create an account</button></p>
+        <button type="button" class="demo-button" id="demo-start">Preview with demo tasks →</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="app-view" class="app-view hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">T</span><span>Tmony</span></div>
+      <nav>
+        <button class="nav-item active" data-filter="all"><span>⌂</span> My Day <b id="today-count">0</b></button>
+        <button class="nav-item" data-filter="upcoming"><span>◷</span> Upcoming</button>
+        <button class="nav-item" data-filter="completed"><span>✓</span> Completed</button>
+        <button class="nav-item" data-filter="high"><span>⚑</span> High Priority</button>
+        <button class="nav-item" id="journal-nav" data-view="journal"><span>✦</span> My Journal</button>
+      </nav>
+      <div class="nav-heading"><span>CATEGORIES</span><button id="category-add">+</button></div>
+      <div id="category-list" class="category-list"></div>
+      <div class="calendar-card">
+        <div class="calendar-icon">31</div>
+        <div><strong>Google Calendar</strong><small id="calendar-status">Not connected</small></div>
+        <button id="calendar-connect">Connect</button>
+      </div>
+      <div class="sidebar-user">
+        <div class="avatar" id="avatar">TA</div>
+        <div><strong id="user-name">Testimony</strong><small id="user-email">hello@example.com</small></div>
+        <button id="logout" title="Sign out">↗</button>
+      </div>
+    </aside>
+    <button id="sidebar-backdrop" class="sidebar-backdrop" aria-label="Close navigation"></button>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobile-menu">☰</button>
+        <div><span class="date-label" id="date-label"></span><h1 id="greeting">Good morning, Testimony.</h1></div>
+        <div class="top-actions"><button id="theme-toggle" title="Toggle theme">☾</button><button class="add-task-button" id="add-task">＋ Add task</button></div>
+      </header>
+
+      <section class="stats-grid">
+        <article class="stat-card accent"><span class="stat-icon">◎</span><div><small>PROGRESS TODAY</small><strong id="progress-text">0 of 0 completed</strong><div class="progress"><i id="progress-bar"></i></div></div><b id="progress-percent">0%</b></article>
+        <article class="stat-card"><span class="stat-icon purple">◷</span><div><small>UPCOMING</small><strong id="upcoming-count">0 tasks</strong><p>In the next 7 days</p></div></article>
+        <article class="stat-card"><span class="stat-icon coral">⚑</span><div><small>HIGH PRIORITY</small><strong id="high-count">0 tasks</strong><p>Needs your attention</p></div></article>
+      </section>
+
+      <section class="task-section">
+        <div class="section-header"><div><h2 id="list-title">My tasks</h2><p id="list-subtitle">One step at a time. You've got this.</p></div><div class="filter-row"><button class="chip active" data-list-filter="all">All</button><button class="chip" data-list-filter="open">To do</button><button class="chip" data-list-filter="completed">Done</button></div></div>
+        <div id="task-list" class="task-list"></div>
+        <button class="quick-add" id="quick-add">＋ <span>Add a new task</span></button>
+      </section>
+
+      <section id="journal-view" class="journal-view hidden">
+        <div class="journal-hero">
+          <div><span class="eyebrow">MY STORY</span><h2>Turn progress into a journal.</h2><p>Tmony uses your verified task activity and your own reflection to write a meaningful record of what you achieved.</p></div>
+          <div class="journal-spark">✦</div>
+        </div>
+        <div class="journal-layout">
+          <div class="journal-create">
+            <div class="journal-card">
+              <div class="journal-card-head"><div><h3>Create a journal</h3><p>Choose a period, review the facts, then generate your story.</p></div><span class="ai-badge">GROQ AI</span></div>
+              <div class="journal-periods" id="journal-periods">
+                <button data-period="day">Today</button><button data-period="week">This week</button><button class="active" data-period="month">This month</button><button data-period="year">This year</button><button data-period="custom">Custom</button>
+              </div>
+              <div class="journal-dates"><label>From<input type="date" id="journal-from"></label><label>To<input type="date" id="journal-to"></label></div>
+              <label>My reflection <textarea id="journal-reflection" rows="5" maxlength="8000" placeholder="How did this period feel? What was difficult? What did you learn or feel grateful for? What would you like to do next?"></textarea></label>
+              <section class="reminder-settings">
+                <div class="reminder-heading"><div><strong>Weekly review notifications</strong><small id="reminder-status">Connect Google Calendar to enable reminders.</small></div><label class="switch"><input type="checkbox" id="reminder-enabled"><span></span></label></div>
+                <div class="reminder-grid"><label>Every<select id="reminder-day"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></label><label>First reminder<input type="time" id="reminder-morning" value="07:00"></label><label>Second reminder<input type="time" id="reminder-evening" value="19:00"></label></div>
+                <button type="button" class="secondary-button reminder-save" id="reminder-save">Save notification schedule</button>
+              </section>
+              <div class="privacy-note"><span>◉</span><p><strong>Your privacy matters.</strong> When Groq is configured, task titles, notes, dates, and this reflection are sent securely to Groq to write the journal. They are never placed in browser code.</p></div>
+              <div class="journal-actions"><button class="secondary-button" id="journal-preview">Preview verified facts</button><button class="primary-button" id="journal-generate">✦ Generate journal</button></div>
+            </div>
+            <div id="journal-facts" class="journal-facts hidden"></div>
+            <article id="journal-result" class="journal-result hidden"></article>
+          </div>
+          <aside class="journal-history journal-card"><div class="journal-card-head"><div><h3>Saved journals</h3><p>Your progress, kept over time.</p></div></div><div id="journal-list" class="journal-list"><p class="muted">No journals yet.</p></div></aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="task-dialog">
+    <form id="task-form" method="dialog">
+      <div class="modal-head"><div><span class="eyebrow">PLAN YOUR NEXT MOVE</span><h2 id="modal-title">Add a new task</h2></div><button type="button" class="close" id="modal-close">×</button></div>
+      <input type="hidden" id="task-id">
+      <label>Task title<input id="task-title" maxlength="180" placeholder="What needs to get done?" required></label>
+      <label>Notes<textarea id="task-notes" rows="3" placeholder="Add a little context..."></textarea></label>
+      <div class="form-grid">
+        <label>Due date<input id="task-due" type="datetime-local"></label>
+        <label>Priority<select id="task-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></label>
+        <label>Repeat<select id="task-recurrence"><option value="none">Doesn't repeat</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></label>
+        <label>Reminder<select id="task-reminder"><option value="0">At start time</option><option value="10">10 minutes before</option><option value="30" selected>30 minutes before</option><option value="60">1 hour before</option><option value="1440">1 day before</option></select></label>
+        <label class="wide">Category<select id="task-category"><option value="">No category</option></select></label>
+      </div>
+      <section id="subtask-box" class="subtask-box hidden">
+        <div class="subtask-heading"><strong>Subtasks</strong><small>Break it into smaller wins</small></div>
+        <div id="subtask-list"></div>
+        <div class="subtask-add"><input id="subtask-title" maxlength="180" placeholder="Add a subtask"><button type="button" id="subtask-add">＋ Add</button></div>
+      </section>
+      <div class="modal-actions"><button type="button" class="secondary-button" id="modal-cancel">Cancel</button><button class="primary-button">Save task</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="category-dialog" class="small-dialog">
+    <form id="category-form" method="dialog"><div class="modal-head"><h2>New category</h2><button type="button" class="close" id="category-close">×</button></div><label>Name<input id="category-name" maxlength="40" required placeholder="Work, Personal..."></label><label>Colour<input id="category-color" type="color" value="#7c5cff"></label><button class="primary-button">Create category</button></form>
+  </dialog>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
